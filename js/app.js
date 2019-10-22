@@ -93,20 +93,29 @@ function randomInRange(min, max) {
 }
 
 function newTotals() {
+  var productsList = document.getElementById('report');
+  productsList.innerHTML = '';
+           var li = document.createElement('li')
+           productsList.appendChild(li)
+        for (var i = 0; i < Products.all.length; i++) {
+            var namrOfList = Products.all[i]
+            li = document.createElement('li');
+            productsList.appendChild(li);
+            li.textContent=  namrOfList.title + " has (" + namrOfList.clickCounter + ") votes and was shown (" + namrOfList.viewsCounter + ") times.";
+        }
+    }
+ 
 
-  var insideTheTable = document.getElementById('theReport');
-  insideTheTable.innerHTML = '';
+//   for (var i = 0; i < Products.all.length; i++) {
+//     var product = Products.all[i];
+//     var row = addElement('tr', insideTheTable);
+//     addElement('td', row, product.title);
+//     addElement('td', row, '' + product.clickCounter);
+//     addElement('td', row, '' + product.shownCounter);
+//     addElement('td', row, '' + ' has (' + product.clickCounter + ') votes and was shown (' + product.shownCounter+ ') times');
 
-  for (var i = 0; i < Products.all.length; i++) {
-    var product = Products.all[i];
-    var row = addElement('tr', insideTheTable);
-    addElement('td', row, product.title);
-    addElement('td', row, '' + product.clickCounter);
-    addElement('td', row, '' + product.shownCounter);
-    addElement('td', row, '' + ' has (' + product.clickCounter + ') votes and was shown (' + product.shownCounter+ ') times');
-
-  }
-}
+//   }
+// }
 function addElement(tag, container, text) {
   var element = document.createElement(tag);
   container.appendChild(element);
