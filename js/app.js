@@ -94,28 +94,17 @@ function randomInRange(min, max) {
 
 function newTotals() {
   var productsList = document.getElementById('report');
-  productsList.innerHTML = '';
-           var li = document.createElement('li')
-           productsList.appendChild(li)
-        for (var i = 0; i < Products.all.length; i++) {
-            var namrOfList = Products.all[i]
-            li = document.createElement('li');
-            productsList.appendChild(li);
-            li.textContent=  namrOfList.title + " has (" + namrOfList.clickCounter + ") votes and was shown (" + namrOfList.viewsCounter + ") times.";
-        }
-    }
- 
 
-//   for (var i = 0; i < Products.all.length; i++) {
-//     var product = Products.all[i];
-//     var row = addElement('tr', insideTheTable);
-//     addElement('td', row, product.title);
-//     addElement('td', row, '' + product.clickCounter);
-//     addElement('td', row, '' + product.shownCounter);
-//     addElement('td', row, '' + ' has (' + product.clickCounter + ') votes and was shown (' + product.shownCounter+ ') times');
+  productsList.innerHTML='';
+      var li = document.createElement('li');
+      productsList.appendChild(li);
+      for (var i = 0; i < Products.all.length; i++) {
+          var list = Products.all[i];
+          li = document.createElement('li');
+          productsList.appendChild(li);
+          li.textContent=  list.title + " has (" + list.clickCounter + ") votes and was shown (" + list.shownCounter + ") times.";
+      }}
 
-//   }
-// }
 function addElement(tag, container, text) {
   var element = document.createElement(tag);
   container.appendChild(element);
@@ -145,19 +134,54 @@ function clickHandler(event) {
 
     newTotals();
 
+    
     if (Products.roundCounter === Products.roundVotingLimit) {
       alert('your clicking attempts is over!');
+      chartToBeShown();
       Products.container.removeEventListener('click', clickHandler);
     } else {
       renderNewProducts();
     }
   }
-}
-Products.container.addEventListener('click', clickHandler);
+}function chartToBeShown() {
+  var productName = [];
+  var clickedTimes = [];
+  var shownTimes = [];
+  for (let i = 0; i < Products.all.length; i++) {
+    var cha = Products.all[i];
+    productName.push(cha.title + 'Votes');
+   productName.push(cha.title + 'Shown');
+   clickedTimes.push(cha.clickCounter);
+   shownTimes.push(cha.shownCounter);
+  }
+ var ctr = document.getElementById('chartjs').getContext('2d');
+ var chart = new Chart(ctr, {
+        type: 'bar',
+        data: {
+        labels: ['Bag ', 'Banana ', 'Bathroom ', 'Boots ', 'Breakfast ', 'Bubblegum ', 'Chair ','Cthulhu ','Dog-Duck ','Dragon ','Pen ','Pet-Sweep ','Scissors ','Shark ','Sweep ','Tauntaun ','Unicorn ','USB ','Water-Can ','Wine-Glass '],
+        datasets: [
+          {
+            label: 'number of votes',
+            backgroundColor: ['black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black'],
+            borderColor: ['white'],
+            data: clickedTimes,
+          },
+          {
+            label: 'shown times',
+            backgroundColor: ['yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow',],
+            borderColor: ['white'] ,
+            data: shownTimes,
+          }
+      ]
+    },
+       options: {}
+ });
+ }
+ Products.container.addEventListener('click', clickHandler);
+ newTotals();
+ renderNewProducts();
+ chartToBeShown();
 
-
-newTotals();
-renderNewProducts();
 
 
 
