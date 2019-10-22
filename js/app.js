@@ -93,20 +93,30 @@ function randomInRange(min, max) {
 }
 
 function newTotals() {
-
-  var insideTheTable = document.getElementById('theReport');
-  insideTheTable.innerHTML = '';
-
-  for (var i = 0; i < Products.all.length; i++) {
-    var product = Products.all[i];
-    var row = addElement('tr', insideTheTable);
-    addElement('td', row, product.title);
-    addElement('td', row, '' + product.clickCounter);
-    addElement('td', row, '' + product.shownCounter);
-    addElement('td', row, '' + ' has (' + product.clickCounter + ') votes and was shown (' + product.shownCounter+ ') times');
-
-  }
-}
+  var productsList = document.getElementById('report');
+      var li = document.createElement('li');
+      productsList.appendChild(li);
+      for (var i = 0; i < Products.all.length; i++) {
+          var list = Products.all[i];
+          li = document.createElement('li');
+          productsList.appendChild(li);
+          li.textContent=  list.title + " has (" + list.clickCounter + ") votes and was shown (" + list.shownCounter + ") times.";
+      }}
+    // var section= document.createElement('section');
+    // productsList.appendChild(section);
+    // var lu = document.createElement('lu');
+    //    section.appendChild(lu);
+    // var row = addElement('tr', insideTheTable);
+    // addElement('td', row, product.title);
+    // addElement('td', row, '' + product.clickCounter);
+    // addElement('td', row, '' + product.shownCounter);
+    // addElement('' + ' has (' + product.clickCounter + ') votes and was shown (' + product.shownCounter+ ') times');
+//     for (var i=0; i<Products.all.length ;i++ ){
+//       var product = Products.all[i];
+//     ul.textContent = this.product ;
+//   }
+//   }
+// }
 function addElement(tag, container, text) {
   var element = document.createElement(tag);
   container.appendChild(element);
@@ -136,6 +146,7 @@ function clickHandler(event) {
 
     newTotals();
 
+    
     if (Products.roundCounter === Products.roundVotingLimit) {
       alert('your clicking attempts is over!');
       Products.container.removeEventListener('click', clickHandler);
@@ -143,12 +154,48 @@ function clickHandler(event) {
       renderNewProducts();
     }
   }
-}
-Products.container.addEventListener('click', clickHandler);
+}function showChart() {
+  var thingsArr = [];
+  var clickArr = [];
+  var showArr = [];
+  for (let i = 0; i < Products.all.length; i++) {
+    var inst = Products.all[i];
+    thingsArr.push(inst.title + 'Vote');
+    thingsArr.push(inst.title + 'Shown');
+    clickArr.push(inst.clickCounter);
+    showArr.push(inst.shownCounter);
+  }
+ var ctx = document.getElementById('myChart').getContext('2d');
+ var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+    // The data for our dataset
+    data: {
+        labels: ['Bag ', 'Banana ', 'Bathroom ', 'Boots ', 'Breakfast ', 'Bubblegum ', 'Chair ','Cthulhu ','Dog-Duck ','Dragon ','Pen ','Pet-Sweep ','Scissors ','Shark ','Sweep ','Tauntaun ','Unicorn ','USB ','Water-Can ','Wine-Glass '],
+        datasets: [
+          {
+            label: 'indecates the voted ones',
+            backgroundColor: ['red','red','red','red','red','red','red','red','red','red','red','red','red','red','red','red','red','red','red','red',],
+            borderColor: ['yellow'],
+            data: clickArr,
+          },
+          {
+            label: 'indicates the shown ones',
+            backgroundColor: ['green','green','green','green','green','green','green','green','green','green','green','green','green','green','green','green','green','green','green','green',],
+            borderColor: ['yellow'] ,
+            data: showArr,
+          }
+      ]
+    },
+    // Configuration options go here
+    options: {}
+ });
+ }
+ Things.container.addEventListener('click', clickHandler);
+ updateTotals();
+ renderNewThings();
+ showChart();
 
-
-newTotals();
-renderNewProducts();
 
 
 
