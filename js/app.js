@@ -94,7 +94,6 @@ function randomInRange(min, max) {
 
 function newTotals() {
   var productsList = document.getElementById('report');
-
   productsList.innerHTML='';
       var li = document.createElement('li');
       productsList.appendChild(li);
@@ -104,7 +103,7 @@ function newTotals() {
           productsList.appendChild(li);
           li.textContent=  list.title + " has (" + list.clickCounter + ") votes and was shown (" + list.shownCounter + ") times.";
       }}
-
+    
 function addElement(tag, container, text) {
   var element = document.createElement(tag);
   container.appendChild(element);
@@ -119,6 +118,7 @@ function clickHandler(event) {
   var clickedId = event.target.id;
   var productClicked;
 
+
   if (clickedId === 'first-image') {
     productClicked = Products.firstObject;
   } else if (clickedId === 'second-image') {
@@ -132,13 +132,16 @@ function clickHandler(event) {
     productClicked.clickCounter++;
     Products.roundCounter++;
 
-    newTotals();
-
     
-    if (Products.roundCounter === Products.roundVotingLimit) {
+if (Products.roundCounter === Products.roundVotingLimit) {
+  newTotals();
       alert('your clicking attempts is over!');
       chartToBeShown();
       Products.container.removeEventListener('click', clickHandler);
+     ////////////////////////////
+      var productString = JSON.stringify(Products.all);
+      localStorage.setItem('products', productString);
+    /////////////////////////
     } else {
       renderNewProducts();
     }
@@ -177,12 +180,27 @@ function clickHandler(event) {
        options: {}
  });
  }
+ function getStoredProducts() {
+
+  // retreive the stored into about list of product
+  var productString = localStorage.getItem('products');
+
+  if(productString) {
+    
+    var rawObjectArray = JSON.parse(productString);
+
+    for(var i=0; i < rawObjectArray.length; i++) {
+      var rawObject = rawObjectArray[i];
+      var currentInstance = Products.all[i];
+      currentInstance.clickCounter = rawObject.clickCounter;
+      currentInstance.shownCounter = rawObject.shownCounter;
+    }
+  }
+}
+
+getStoredProducts();
  Products.container.addEventListener('click', clickHandler);
- newTotals();
+//  newTotals();
  renderNewProducts();
  chartToBeShown();
-
-
-
-
 
