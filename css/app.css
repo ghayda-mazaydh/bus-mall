@@ -2,13 +2,22 @@
     box-sizing: border-box;
   }
   
+  h1 {
+    font-size: 100px;
+  }
+  p {
+    font-size: 50px;
+  }
+  ul {
+    text-align: center;
+  }
   body {
     background:rgb(184, 176, 176);
     text-align: center;
     font-family: 'Noto Serif', serif;
     }
     section div {
-        width: 25%;
+        width: 33.33%;
         float: left;
         padding: 25px;
        
