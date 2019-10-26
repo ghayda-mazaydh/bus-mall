@@ -1,4 +1,5 @@
 'use strict'
+//////////////////////////////////////////////////////////////////////////////
 function Products(title, src) {
   this.title = title;
   this.src = src;
@@ -50,15 +51,21 @@ function renderNewProducts() {
   do {
     Products.firstObject = getRandomProducts();
   } while (forbidden.includes(Products.firstObject))
-  forbidden.push(Products.firstObject);
+  forbidden.push(Products.firstObject);  // forbidden is now 4 long; 3 previous pics and the first one
+
   do {
     Products.secondObject = getRandomProducts();
-  } while (forbidden.includes(Products.secondObject))
-  forbidden.push(Products.secondObject);
-  do {
-    Products.thirdObject = getRandomProducts();
-  } while (forbidden.includes(Products.thirdObject));
+  }
+  while (forbidden.includes(Products.secondObject))
+  forbidden.push(Products.secondObject); // forbidden is 5 long; 3 previous pics ,first one and second pic
 
+  do { //////////it may run for infinity
+    Products.thirdObject = getRandomProducts();
+  }
+  while (forbidden.includes(Products.thirdObject));
+
+
+  // by time we get here we will have 3 different objects
   Products.firstObject.shownCounter++;
   Products.secondObject.shownCounter++;
   Products.thirdObject.shownCounter++;
@@ -81,7 +88,7 @@ function renderNewProducts() {
   Products.secondImageTitle.textContent = Products.secondObject.title;
   Products.thirdImageTitle.textContent = Products.thirdObject.title;
 }
-
+/////////////////////////// get random pic/////////////////////////////////////
 function getRandomProducts() {
   var index = Math.floor(Math.random() * Products.all.length);
   return Products.all[index];
@@ -93,17 +100,19 @@ function randomInRange(min, max) {
 }
 
 function newTotals() {
+  // list the clicked and shown times for each product
   var productsList = document.getElementById('report');
-  productsList.innerHTML='';
-      var li = document.createElement('li');
-      productsList.appendChild(li);
-      for (var i = 0; i < Products.all.length; i++) {
-          var list = Products.all[i];
-          li = document.createElement('li');
-          productsList.appendChild(li);
-          li.textContent=  list.title + " has (" + list.clickCounter + ") votes and was shown (" + list.shownCounter + ") times.";
-      }}
-    
+  productsList.innerHTML = '';
+  var li = document.createElement('li');
+  productsList.appendChild(li);
+  for (var i = 0; i < Products.all.length; i++) {
+    var list = Products.all[i];
+    li = document.createElement('li');
+    productsList.appendChild(li);
+    li.textContent = list.title + " has (" + list.clickCounter + ") votes and was shown (" + list.shownCounter + ") times.";
+  }
+}
+// display the list of products
 function addElement(tag, container, text) {
   var element = document.createElement(tag);
   container.appendChild(element);
@@ -132,64 +141,66 @@ function clickHandler(event) {
     productClicked.clickCounter++;
     Products.roundCounter++;
 
-    
-if (Products.roundCounter === Products.roundVotingLimit) {
-  newTotals();
+    // newTotals();///////// it was here and had been meved to 146
+    if (Products.roundCounter === Products.roundVotingLimit) {
+      newTotals();
       alert('your clicking attempts is over!');
       chartToBeShown();
       Products.container.removeEventListener('click', clickHandler);
-     ////////////////////////////
+      ///////////////////////////////////////////////////
+      // we're done, let's store
       var productString = JSON.stringify(Products.all);
       localStorage.setItem('products', productString);
-    /////////////////////////
+      ////////////////////////////////////////////////////
     } else {
       renderNewProducts();
     }
   }
-}function chartToBeShown() {
+} function chartToBeShown() {
   var productName = [];
   var clickedTimes = [];
   var shownTimes = [];
   for (let i = 0; i < Products.all.length; i++) {
     var cha = Products.all[i];
     productName.push(cha.title + 'Votes');
-   productName.push(cha.title + 'Shown');
-   clickedTimes.push(cha.clickCounter);
-   shownTimes.push(cha.shownCounter);
+    productName.push(cha.title + 'Shown');
+    clickedTimes.push(cha.clickCounter);
+    shownTimes.push(cha.shownCounter);
   }
- var ctr = document.getElementById('chartjs').getContext('2d');
- var chart = new Chart(ctr, {
-        type: 'bar',
-        data: {
-        labels: ['Bag ', 'Banana ', 'Bathroom ', 'Boots ', 'Breakfast ', 'Bubblegum ', 'Chair ','Cthulhu ','Dog-Duck ','Dragon ','Pen ','Pet-Sweep ','Scissors ','Shark ','Sweep ','Tauntaun ','Unicorn ','USB ','Water-Can ','Wine-Glass '],
-        datasets: [
-          {
-            label: 'number of votes',
-            backgroundColor: ['black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black','black'],
-            borderColor: ['white'],
-            data: clickedTimes,
-          },
-          {
-            label: 'shown times',
-            backgroundColor: ['yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow','yellow','yellow',' yellow','yellow',],
-            borderColor: ['white'] ,
-            data: shownTimes,
-          }
+  // let's draw the charts
+  var ctr = document.getElementById('chartjs').getContext('2d');
+  var chart = new Chart(ctr, {
+    type: 'bar',
+    data: {
+      labels: ['Bag ', 'Banana ', 'Bathroom ', 'Boots ', 'Breakfast ', 'Bubblegum ', 'Chair ', 'Cthulhu ', 'Dog-Duck ', 'Dragon ', 'Pen ', 'Pet-Sweep ', 'Scissors ', 'Shark ', 'Sweep ', 'Tauntaun ', 'Unicorn ', 'USB ', 'Water-Can ', 'Wine-Glass '],
+      datasets: [
+        {
+          label: 'number of votes',
+          backgroundColor: ['black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black'],
+          borderColor: ['white'],
+          data: clickedTimes,
+        },
+        {
+          label: 'shown times',
+          backgroundColor: ['yellow', 'yellow', ' yellow', 'yellow', 'yellow', 'yellow', ' yellow', 'yellow', 'yellow', 'yellow', ' yellow', 'yellow', 'yellow', 'yellow', ' yellow', 'yellow', 'yellow', 'yellow', ' yellow', 'yellow',],
+          borderColor: ['white'],
+          data: shownTimes,
+        }
       ]
     },
-       options: {}
- });
- }
- function getStoredProducts() {
+    options: {}
+  });
+}
+function getStoredProducts() {
 
   // retreive the stored into about list of product
   var productString = localStorage.getItem('products');
 
-  if(productString) {
-    
+  if (productString) {
+
     var rawObjectArray = JSON.parse(productString);
 
-    for(var i=0; i < rawObjectArray.length; i++) {
+    for (var i = 0; i < rawObjectArray.length; i++) {
       var rawObject = rawObjectArray[i];
       var currentInstance = Products.all[i];
       currentInstance.clickCounter = rawObject.clickCounter;
@@ -199,8 +210,8 @@ if (Products.roundCounter === Products.roundVotingLimit) {
 }
 
 getStoredProducts();
- Products.container.addEventListener('click', clickHandler);
+Products.container.addEventListener('click', clickHandler);
 //  newTotals();
- renderNewProducts();
- chartToBeShown();
+renderNewProducts();
+chartToBeShown();
 
